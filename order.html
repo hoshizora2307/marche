@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ご注文｜信州マルシェ</title>
+<meta name="robots" content="noindex">
+<script src="https://js.stripe.com/v3/"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Old+Mincho:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2b3440; --sub:#5c6672; --cream:#faf7f0; --paper:#ffffff;
+  --green:#3f6b4f; --green-deep:#2d5039; --amber:#c98a2d; --line:#e8e1d3;
+  --panel:#fdfbf5; --red:#b7452c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);color:var(--ink);font-family:'Noto Sans JP',sans-serif;line-height:1.8;-webkit-font-smoothing:antialiased}
+.jp{font-family:'Zen Old Mincho',serif}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px}
+a{color:inherit}
+
+.head{background:var(--cream);border-bottom:1px solid var(--line)}
+.head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+.head .logo{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:18px;display:flex;align-items:center;gap:8px;text-decoration:none}
+.head .logo::before{content:"";width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#6f9d80,var(--green-deep))}
+.head .back{font-size:12.5px;color:var(--sub);text-decoration:none}
+
+.hero{padding:32px 0 6px}
+.hero .tag{display:inline-block;background:var(--green-deep);color:#fff;font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:12px;letter-spacing:.1em}
+.hero h1{font-size:clamp(22px,5vw,28px);font-weight:900}
+
+.steps-nav{display:flex;gap:8px;margin:22px 0 6px}
+.steps-nav .dot{width:100%;height:5px;border-radius:99px;background:var(--line)}
+.steps-nav .dot.on{background:var(--amber)}
+.steps-nav .dot.done{background:var(--green)}
+.step-label{font-size:12px;font-weight:700;color:var(--sub);margin-bottom:14px;letter-spacing:.06em}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px 20px;box-shadow:0 8px 24px rgba(43,52,64,.05)}
+.card h2{font-size:16px;font-weight:900;margin-bottom:16px;padding-left:12px;border-left:4px solid var(--green)}
+
+.item-row{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--panel)}
+.top-row{display:flex;gap:12px;align-items:center}
+.thumb{width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;border:1px solid var(--line)}
+.thumb svg{width:100%;height:100%;display:block}
+.info b{font-size:13.5px;display:block;line-height:1.5}
+.info span{font-size:12.5px;color:var(--sub)}
+.ctrl-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.stepper{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.stepper button{width:38px;height:34px;border:0;background:#fff;font-size:16px;cursor:pointer;color:var(--green-deep);font-weight:700}
+.stepper button:active{background:var(--cream)}
+.stepper .qty{width:36px;text-align:center;font-weight:900;font-size:14px}
+.sub{font-weight:900;font-size:14px}
+
+.ship-line{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);padding:10px 4px 0;border-top:1px dashed var(--line);margin-top:14px}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 4px 0}
+.total-row .label{font-weight:700;font-size:13.5px}
+.total-row .amount{font-weight:900;font-size:22px;color:var(--green-deep)}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:11px 12px;font-size:15px;font-family:inherit;background:#fff}
+.field input:focus,.field textarea:focus{outline:2px solid var(--green);outline-offset:1px;border-color:var(--green)}
+.zipwrap{display:flex;gap:8px}
+.zipwrap input{flex:1}
+.zipbtn{border:1px solid var(--green);background:#edf3ee;color:var(--green-deep);border-radius:8px;padding:0 14px;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.zipnote{font-size:11.5px;color:var(--sub);margin-top:5px}
+
+.radio-group{display:grid;gap:10px}
+.radio-opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;padding:13px 14px;font-size:14px;font-weight:700;cursor:pointer;background:#fff}
+.radio-opt:has(input:checked){border-color:var(--green);background:#edf3ee}
+.radio-opt input{accent-color:var(--green)}
+
+.card-pay-wrap{display:none;margin-top:16px;border-top:1px dashed var(--line);padding-top:16px}
+.card-pay-wrap.show{display:block}
+.card-field{margin-bottom:12px}
+.card-field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px}
+.card-field-row{display:flex;gap:10px}
+.card-field-row .card-field{flex:1}
+.stripe-input{border:1px solid var(--line);border-radius:8px;padding:11px 12px;background:#fff}
+.stripe-input.StripeElement--focus{border-color:var(--green);outline:2px solid var(--green);outline-offset:1px}
+.stripe-input.StripeElement--invalid{border-color:var(--red)}
+input.stripe-input{width:100%;font-size:15px;font-family:inherit}
+#card-errors{color:var(--red);font-size:12.5px;font-weight:700;margin-top:8px;min-height:1em}
+.card-lock{font-size:11.5px;color:var(--sub);margin-top:10px}
+.pr-divider{display:flex;align-items:center;gap:12px;margin:14px 0;color:var(--sub);font-size:11.5px}
+.pr-divider::before,.pr-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.err{display:none;color:var(--red);font-size:12.5px;font-weight:700;margin-top:10px}
+.err.show{display:block}
+
+.nav-row{display:flex;gap:10px;margin:18px 0 40px}
+.btn{border:0;border-radius:999px;padding:14px 22px;font-size:14.5px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:.05em}
+.btn-primary{flex:1;background:var(--amber);color:#fff;box-shadow:0 6px 16px rgba(201,138,45,.3)}
+.btn-primary:disabled{opacity:.6;cursor:default}
+.btn-back{background:#fff;border:1px solid var(--line);color:var(--sub)}
+
+.confirm{display:none;background:linear-gradient(160deg,var(--green-deep),#1e3a28);color:#fff;border-radius:14px;padding:26px 22px;margin-top:14px}
+.confirm.show{display:block}
+.confirm h2{font-size:17px;font-weight:900;margin-bottom:16px;color:#f3e3c2}
+.confirm dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13.5px;margin-bottom:16px}
+.confirm dt{color:#bcd0c2}
+.confirm dd{font-weight:700}
+.clist{border-top:1px solid rgba(255,255,255,.2);padding-top:12px;font-size:13.5px}
+.cline{display:flex;justify-content:space-between;padding:4px 0}
+.ctotal{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(255,255,255,.2);margin-top:10px;padding-top:12px}
+.ctotal b{font-size:20px;color:#f3e3c2}
+.confirm-note{font-size:11.5px;color:#bcd0c2;margin-top:14px}
+.confirm .nav-row{margin-bottom:0}
+.confirm .btn-back{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff}
+
+.thanks{display:none;background:linear-gradient(160deg,var(--green-deep),#1e3a28);color:#fff;border-radius:14px;padding:30px 26px;margin-top:14px;text-align:center}
+.thanks.show{display:block}
+.thanks h2{color:#f3e3c2;font-size:18px;font-weight:900;margin-bottom:14px}
+.thanks p{font-size:14px;line-height:2;color:#dce7df}
+.btn-mail{display:inline-block;background:#fff;color:var(--green-deep);text-decoration:none;font-size:13.5px}
+</style>
+</head>
+<body>
+<header class="head">
+  <div class="wrap">
+    <a href="index.html" class="logo">信州マルシェ</a>
+    <a href="index.html" class="back">← トップページに戻る</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">産地直送・クール便</span>
+    <h1 class="jp">ご注文フォーム</h1>
+  </div>
+
+  <div class="steps-nav" id="stepsNav">
+    <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+  </div>
+  <div class="step-label" id="stepLabel">STEP 1 / 5　商品を選ぶ</div>
+
+  <div class="stepbox" data-step="1">
+    <div class="card">
+      <h2>商品を選ぶ</h2>
+
+      <div class="item-row" data-price="480">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#f6ead3"/><path d="M30 72 Q30 42 37 38 L63 38 Q70 42 70 72 Q70 77 50 77 Q30 77 30 72Z" fill="#f2c14e"/><path d="M35 40 Q50 34 65 40 Q67 47 64 51 Q50 57 36 51 Q33 46 35 40Z" fill="#8a4b1f"/></svg></div>
+          <div class="info"><b>信州濃厚プリン 1個</b><span>¥480（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="1300">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#f3e7db"/><path d="M25 70 Q24 46 32 42 Q50 36 68 42 Q76 46 75 70 Q75 76 50 76 Q25 76 25 70Z" fill="#f0d9a8"/><path d="M30 44 Q50 36 70 44 Q73 50 70 53 Q50 47 30 53 Q27 49 30 44Z" fill="#7c4a22"/></svg></div>
+          <div class="info"><b>安曇野バスクチーズケーキ（プレーン）</b><span>¥1,300（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="1300">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#f3e7db"/><path d="M25 70 Q24 46 32 42 Q50 36 68 42 Q76 46 75 70 Q75 76 50 76 Q25 76 25 70Z" fill="#f0d9a8"/><path d="M30 44 Q50 36 70 44 Q73 50 70 53 Q50 47 30 53 Q27 49 30 44Z" fill="#7c4a22"/><circle cx="36" cy="62" r="6" fill="#c0392b"/></svg></div>
+          <div class="info"><b>安曇野バスクチーズケーキ（アップル）</b><span>¥1,300（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="1300">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#f3e7db"/><path d="M25 70 Q24 46 32 42 Q50 36 68 42 Q76 46 75 70 Q75 76 50 76 Q25 76 25 70Z" fill="#f0d9a8"/><path d="M30 44 Q50 36 70 44 Q73 50 70 53 Q50 47 30 53 Q27 49 30 44Z" fill="#7c4a22"/><circle cx="36" cy="62" r="6" fill="#5b4a8f"/></svg></div>
+          <div class="info"><b>安曇野バスクチーズケーキ（ブルーベリー）</b><span>¥1,300（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="1080">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#efe8da"/><ellipse cx="35" cy="38" rx="18" ry="14" fill="#e6c996"/><ellipse cx="66" cy="38" rx="18" ry="14" fill="#e2c28c"/><ellipse cx="35" cy="64" rx="18" ry="14" fill="#e2c28c"/><ellipse cx="66" cy="64" rx="18" ry="14" fill="#e6c996"/></svg></div>
+          <div class="info"><b>おやき 4個入り<br>（野沢菜・あんこ・切り干し大根・なす）</b><span>¥1,080（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="1650">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#f6ecd9"/><path d="M22 68 Q22 48 50 40 Q78 48 78 68 Q78 74 50 74 Q22 74 22 68Z" fill="#d99a3e"/><path d="M30 60 L72 48 M38 68 L74 58 M44 42 L34 66 M58 42 L50 71" stroke="#b97b26" stroke-width="4"/><circle cx="66" cy="30" r="9" fill="#c0392b"/></svg></div>
+          <div class="info"><b>信州アップルパイ</b><span>¥1,650（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="540">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#eef0e4"/><path d="M32 70 Q36 34 40 28 Q44 34 42 70Z" fill="#4a7a44"/><path d="M46 70 Q50 28 56 22 Q60 30 56 70Z" fill="#3f6b3a"/><path d="M60 70 Q64 36 70 30 Q73 38 69 70Z" fill="#548a4c"/></svg></div>
+          <div class="info"><b>野沢菜</b><span>¥540（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="item-row" data-price="1200">
+        <div class="top-row">
+          <div class="thumb"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#efe6dc"/><path d="M50 76 Q26 74 26 52 Q26 34 46 26 Q50 22 54 26 Q74 34 74 54 Q74 74 50 76Z" fill="#3a2f2a"/><path d="M40 72 Q38 48 44 32 M52 74 Q54 48 50 30 M62 70 Q66 50 58 32" stroke="#241d19" stroke-width="3" fill="none"/></svg></div>
+          <div class="info"><b>黒ニンニク</b><span>¥1,200（税込）</span></div>
+        </div>
+        <div class="ctrl-row">
+          <div class="stepper"><button type="button" data-act="minus">－</button><span class="qty">0</span><button type="button" data-act="plus">＋</button></div>
+          <div class="sub">¥0</div>
+        </div>
+      </div>
+
+      <div class="ship-line"><span>送料（クール便）</span><span>¥800</span></div>
+      <div class="total-row"><span class="label">合計</span><span class="amount" id="grandTotal">¥0</span></div>
+      <div class="err" id="itemErr">商品を1つ以上お選びください。</div>
+    </div>
+    <div class="nav-row"><button type="button" class="btn btn-primary" data-next>次へ：お届け先情報</button></div>
+  </div>
+
+  <div class="stepbox" data-step="2" hidden>
+    <div class="card">
+      <h2>お届け先情報</h2>
+      <div class="field">
+        <label for="name">お名前 <span style="color:var(--red)">*</span></label>
+        <input type="text" id="name" placeholder="例）山田 太郎">
+      </div>
+      <div class="field">
+        <label for="zip">郵便番号 <span style="color:var(--red)">*</span></label>
+        <div class="zipwrap">
+          <input type="text" id="zip" inputmode="numeric" placeholder="例）3980002">
+          <button type="button" class="zipbtn" id="zipLookup">住所を自動入力</button>
+        </div>
+        <div class="zipnote" id="zipStatus">ハイフンなしの7桁でご入力ください。</div>
+      </div>
+      <div class="field">
+        <label for="address1">住所1（自動入力／番地まで） <span style="color:var(--red)">*</span></label>
+        <input type="text" id="address1" placeholder="例）長野県大町市大町1903-1">
+      </div>
+      <div class="field">
+        <label for="address2">住所2（マンション名・部屋番号）</label>
+        <input type="text" id="address2" placeholder="例）〇〇マンション201号室">
+      </div>
+      <div class="field">
+        <label for="phone">お電話番号 <span style="color:var(--red)">*</span></label>
+        <input type="tel" id="phone" placeholder="例）090-1234-5678">
+      </div>
+      <div class="field">
+        <label for="email">メールアドレス（ご注文確認・発送のご連絡用） <span style="color:var(--red)">*</span></label>
+        <input type="email" id="email" placeholder="例）example@mail.com">
+      </div>
+      <div class="err" id="step2Err">必須項目をすべてご入力ください。</div>
+    </div>
+    <div class="nav-row">
+      <button type="button" class="btn btn-back" data-back>戻る</button>
+      <button type="button" class="btn btn-primary" data-next>次へ：お支払い方法</button>
+    </div>
+  </div>
+
+  <div class="stepbox" data-step="3" hidden>
+    <div class="card">
+      <h2>お支払い方法</h2>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="pay" value="card" checked>クレジットカード</label>
+        <label class="radio-opt"><input type="radio" name="pay" value="cod">商品代引き</label>
+      </div>
+      <p style="font-size:11.5px;color:var(--sub);margin-top:10px">※クレジットカードはご注文確定時、商品代引きは商品お受け取り時にお支払いください。</p>
+
+      <div id="cardPayWrap" class="card-pay-wrap">
+        <div id="paymentRequestWrap" style="display:none">
+          <div id="payment-request-button"></div>
+          <div class="pr-divider"><span>または、カード情報を直接入力</span></div>
+        </div>
+        <div class="card-field">
+          <label>カード番号</label>
+          <div id="card-number-element" class="stripe-input"></div>
+        </div>
+        <div class="card-field-row">
+          <div class="card-field">
+            <label>有効期限</label>
+            <div id="card-expiry-element" class="stripe-input"></div>
+          </div>
+          <div class="card-field">
+            <label>セキュリティコード</label>
+            <div id="card-cvc-element" class="stripe-input"></div>
+          </div>
+        </div>
+        <div class="card-field">
+          <label>カード名義人</label>
+          <input type="text" id="cardHolderName" class="stripe-input" placeholder="TARO YAMADA（半角ローマ字）">
+        </div>
+        <div id="card-errors" role="alert"></div>
+        <div class="card-lock">🔒 Stripeによる安全な決済です。カード番号は当サイトのサーバーには保存されません。</div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button type="button" class="btn btn-back" data-back>戻る</button>
+      <button type="button" class="btn btn-primary" data-next>次へ：ご要望</button>
+    </div>
+  </div>
+
+  <div class="stepbox" data-step="4" hidden>
+    <div class="card">
+      <h2>ご要望・備考（任意）</h2>
+      <div class="field">
+        <textarea id="note" rows="3" placeholder="アレルギーのご確認、お届け日のご希望などがあればご記入ください"></textarea>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button type="button" class="btn btn-back" data-back>戻る</button>
+      <button type="button" class="btn btn-primary" id="toConfirmBtn">注文内容を確認する</button>
+    </div>
+  </div>
+
+  <div class="confirm" id="confirmBox">
+    <h2>📋 ご注文内容の確認</h2>
+    <dl>
+      <dt>お名前</dt><dd id="cName"></dd>
+      <dt>ご住所</dt><dd id="cAddress"></dd>
+      <dt>お電話番号</dt><dd id="cPhone"></dd>
+      <dt>お支払い方法</dt><dd id="cPay"></dd>
+    </dl>
+    <div class="clist" id="cList"></div>
+    <div class="ctotal"><span>合計金額</span><b id="cTotal"></b></div>
+    <div id="cNoteWrap" style="display:none;margin-top:14px;font-size:13px;color:#dce7df">備考：<span id="cNote"></span></div>
+
+    <p class="confirm-note">※クール便にてご注文から2日以内に発送いたします。</p>
+    <div class="nav-row">
+      <button type="button" class="btn btn-back" id="editBtn">修正する</button>
+      <button type="button" class="btn btn-primary" id="submitOrderBtn">この内容でご注文を確定する</button>
+    </div>
+  </div>
+
+  <div class="thanks" id="thanksBox">
+    <h2>🌿 ご注文ありがとうございます</h2>
+    <p style="margin-bottom:16px">ご注文を承りました。ご登録のメールアドレス宛に<b style="color:#fff">ご注文完了メール</b>をお送りしましたので、ご確認ください。<br>クール便にて<b style="color:#fff">2日以内に発送</b>いたします。発送の際、追跡番号をメールでお知らせいたします。</p>
+    <dl style="display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13px;margin-bottom:16px">
+      <dt style="color:#bcd0c2">お届け先</dt><dd id="tAddress" style="font-weight:700"></dd>
+      <dt style="color:#bcd0c2">合計金額</dt><dd id="tTotal" style="font-weight:700"></dd>
+    </dl>
+    <p class="confirm-note">※内容の訂正やキャンセルのご連絡は、お電話にてお願いいたします。<br>0261-85-0131（MONDOCOLO社）　9:00～17:00（土日祝除く）</p>
+    <a href="index.html" class="btn btn-mail" style="margin-top:14px">トップページに戻る</a>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:34px 20px 20px;font-size:11px;color:var(--sub)">
+  <div>制作・運営：MONDOCOLO STUDIO.</div>
+  <div style="margin-top:6px">© 2026 株式会社MONDOCOLO</div>
+</footer>
+
+<script>
+const WORKER_URL = 'https://aged-mode-2be1.hoshizora2307.workers.dev';
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_N1uRrEo2nTTKsbYtVJ9EA0hB';
+const ORDER_LABEL = '信州マルシェ ご注文';
+
+let stripe = null, cardNumberEl = null, cardExpiryEl = null, cardCvcEl = null, stripeElements = null;
+try{
+  if(typeof Stripe !== 'undefined' && /^pk_(live|test)_/.test(STRIPE_PUBLISHABLE_KEY)){
+    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+    stripeElements = stripe.elements();
+  }else if(STRIPE_PUBLISHABLE_KEY && !/^pk_/.test(STRIPE_PUBLISHABLE_KEY)){
+    console.warn('STRIPE_PUBLISHABLE_KEY には pk_ で始まる公開可能キーを設定してください。');
+  }
+}catch(e){
+  stripe = null; stripeElements = null;
+  console.error('Stripeの初期化に失敗しました', e);
+}
+
+(function(){
+  const rows = [...document.querySelectorAll('.item-row')];
+  const grandTotalEl = document.getElementById('grandTotal');
+  const SHIPPING = 800;
+  const TOTAL_STEPS = 5;
+  let current = 1;
+
+  function fmt(n){ return '¥' + n.toLocaleString(); }
+
+  function recalc(){
+    let total = 0;
+    rows.forEach(row=>{
+      const price = +row.dataset.price;
+      const qty = +row.querySelector('.qty').textContent;
+      const sub = price*qty;
+      row.querySelector('.sub').textContent = fmt(sub);
+      total += sub;
+    });
+    const withShip = total>0 ? total+SHIPPING : 0;
+    grandTotalEl.textContent = fmt(withShip);
+    return {items: total, total: withShip};
+  }
+  rows.forEach(row=>{
+    const qtyEl = row.querySelector('.qty');
+    row.querySelector('[data-act="plus"]').addEventListener('click', ()=>{ qtyEl.textContent = Math.min(20,(+qtyEl.textContent)+1); recalc(); });
+    row.querySelector('[data-act="minus"]').addEventListener('click', ()=>{ qtyEl.textContent = Math.max(0,(+qtyEl.textContent)-1); recalc(); });
+  });
+  recalc();
+
+  const cardErrorsEl = document.getElementById('card-errors');
+  let paymentRequest = null, prButton = null, prAvailable = false, prAmount = 0, prPayloadBase = null, prReady = null;
+
+  function setupPaymentRequestButton(amount, orderPayloadBase){
+    if(!stripe) return;
+    prAmount = amount;
+    prPayloadBase = orderPayloadBase;
+    const prWrap = document.getElementById('paymentRequestWrap');
+
+    if(paymentRequest){
+      try{ paymentRequest.update({ total: { label: ORDER_LABEL, amount: prAmount } }); }catch(e){}
+      if(prReady) prReady.then((ok)=>{ prWrap.style.display = ok ? 'block' : 'none'; });
+      else prWrap.style.display = prAvailable ? 'block' : 'none';
+      return;
+    }
+
+    paymentRequest = stripe.paymentRequest({
+      country: 'JP',
+      currency: 'jpy',
+      total: { label: ORDER_LABEL, amount: prAmount },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    });
+    prButton = stripeElements.create('paymentRequestButton', { paymentRequest });
+
+    prReady = paymentRequest.canMakePayment().then((result)=>{
+      prAvailable = !!result;
+      if(prAvailable){ prButton.mount('#payment-request-button'); prWrap.style.display = 'block'; }
+      else { prWrap.style.display = 'none'; }
+      return prAvailable;
+    }).catch((e)=>{ prAvailable = false; prWrap.style.display = 'none'; console.error('canMakePayment', e); return false; });
+
+    paymentRequest.on('paymentmethod', async (ev)=>{
+      try{
+        const piRes = await fetch(WORKER_URL + '/create-payment-intent', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({ amount: prAmount, description: ORDER_LABEL, email: document.getElementById('email').value.trim() }),
+        });
+        const piData = await piRes.json();
+        if(!piData.clientSecret){ ev.complete('fail'); return; }
+
+        const result = await stripe.confirmCardPayment(piData.clientSecret, { payment_method: ev.paymentMethod.id }, { handleActions: false });
+        if(result.error){ ev.complete('fail'); return; }
+        ev.complete('success');
+
+        if(result.paymentIntent.status === 'requires_action'){
+          const actionResult = await stripe.confirmCardPayment(piData.clientSecret);
+          if(actionResult.error) return;
+        }
+
+        const orderPayload = { ...prPayloadBase, payment: 'クレジットカード（Apple Pay/Google Pay・決済済み）' };
+        fetch(WORKER_URL + '/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(orderPayload) }).catch(()=>{});
+        document.getElementById('tAddress').textContent = prPayloadBase.address;
+        document.getElementById('tTotal').textContent = prPayloadBase.total;
+        document.getElementById('confirmBox').classList.remove('show');
+        document.getElementById('thanksBox').classList.add('show');
+        window.scrollTo({top:0, behavior:'smooth'});
+      }catch(e){
+        ev.complete('fail');
+      }
+    });
+  }
+
+  function mountCardElements(){
+    if(!stripe || cardNumberEl) return;
+    const style = { base: { fontSize:'15px', color:'#2b3440', '::placeholder':{ color:'#b0a893' } } };
+    cardNumberEl = stripeElements.create('cardNumber', { style });
+    cardExpiryEl = stripeElements.create('cardExpiry', { style });
+    cardCvcEl = stripeElements.create('cardCvc', { style });
+    cardNumberEl.mount('#card-number-element');
+    cardExpiryEl.mount('#card-expiry-element');
+    cardCvcEl.mount('#card-cvc-element');
+    [cardNumberEl, cardExpiryEl, cardCvcEl].forEach(el=>{
+      el.on('change', (event)=>{ cardErrorsEl.textContent = event.error ? event.error.message : ''; });
+    });
+  }
+  function updateCardVisibility(){
+    const payVal = document.querySelector('input[name="pay"]:checked').value;
+    const wrap = document.getElementById('cardPayWrap');
+    if(payVal === 'card'){
+      wrap.classList.add('show');
+      if(stripe){
+        mountCardElements();
+        refreshPaymentRequestButton();
+      } else {
+        cardErrorsEl.textContent = '⚠ 決済フォームが設定されていません。STRIPE_PUBLISHABLE_KEYの設定をご確認ください。';
+      }
+    } else {
+      wrap.classList.remove('show');
+    }
+  }
+  function buildOrderPayloadBase(){
+    const { total } = recalc();
+    const name = document.getElementById('name').value.trim();
+    const zip = document.getElementById('zip').value.trim();
+    const address1 = document.getElementById('address1').value.trim();
+    const address2 = document.getElementById('address2').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const fullAddress = `〒${zip}　${address1}${address2 ? '　' + address2 : ''}`;
+    const items_list = rows.filter(r=>+r.querySelector('.qty').textContent>0).map(r=>({
+      name: r.querySelector('.info b').innerText.replace(/\n/g,' '),
+      qty: +r.querySelector('.qty').textContent,
+      sub: r.querySelector('.sub').textContent
+    }));
+    return { total, payload: { type:'home', shop:'shinshu-marche', name, address:fullAddress, phone, email, payment:'クレジットカード', items:items_list, total:fmt(total), note: document.getElementById('note').value.trim() } };
+  }
+  function refreshPaymentRequestButton(){
+    try{
+      const { total, payload } = buildOrderPayloadBase();
+      if(total > 0) setupPaymentRequestButton(total, payload);
+    }catch(e){
+      console.error('paymentRequestButton', e);
+      const w = document.getElementById('paymentRequestWrap');
+      if(w) w.style.display = 'none';
+    }
+  }
+  document.querySelectorAll('input[name="pay"]').forEach(r=> r.addEventListener('change', updateCardVisibility));
+  setTimeout(()=>{ try{ if(stripe) setupPaymentRequestButton(480, null); }catch(e){ console.error('prewarm', e); } }, 0);
+  updateCardVisibility();
+
+  const stepLabels = {1:'商品を選ぶ',2:'お届け先情報',3:'お支払い方法',4:'ご要望',5:'ご注文内容の確認'};
+  function renderNav(){
+    const dots = [...document.querySelectorAll('#stepsNav .dot')];
+    dots.forEach((d,i)=>{ d.classList.toggle('on', i+1===current); d.classList.toggle('done', i+1<current); });
+    document.getElementById('stepLabel').textContent = `STEP ${current} / ${TOTAL_STEPS}　${stepLabels[current]}`;
+  }
+  function showStep(n){
+    current = n;
+    document.querySelectorAll('.stepbox').forEach(el=>{ el.hidden = (+el.dataset.step !== n); });
+    document.getElementById('confirmBox').classList.remove('show');
+    renderNav();
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(n === 3) updateCardVisibility();
+  }
+
+  function validateStep(n){
+    if(n===1){
+      const {items} = recalc();
+      const err = document.getElementById('itemErr');
+      if(items<=0){ err.classList.add('show'); return false; }
+      err.classList.remove('show'); return true;
+    }
+    if(n===2){
+      const ok = ['name','zip','address1','phone','email'].every(id=>document.getElementById(id).value.trim());
+      document.getElementById('step2Err').classList.toggle('show', !ok);
+      return ok;
+    }
+    if(n===3){
+      const payVal = document.querySelector('input[name="pay"]:checked').value;
+      if(payVal === 'card'){
+        const ok = document.getElementById('cardHolderName').value.trim().length > 0;
+        cardErrorsEl.textContent = ok ? '' : 'カード名義人をご入力ください。';
+        return ok;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  document.querySelectorAll('[data-next]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ if(validateStep(current)) showStep(current+1); });
+  });
+  document.querySelectorAll('[data-back]').forEach(btn=>{
+    btn.addEventListener('click', ()=> showStep(current-1));
+  });
+
+  document.getElementById('zipLookup').addEventListener('click', lookupZip);
+  document.getElementById('zip').addEventListener('blur', lookupZip);
+  async function lookupZip(){
+    const zip = document.getElementById('zip').value.replace(/[^\d]/g,'');
+    const statusEl = document.getElementById('zipStatus');
+    if(zip.length !== 7){ return; }
+    statusEl.textContent = '住所を検索中…';
+    try{
+      const res = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zip}`);
+      const data = await res.json();
+      if(data.results && data.results[0]){
+        const r = data.results[0];
+        document.getElementById('address1').value = `${r.address1}${r.address2}${r.address3}`;
+        statusEl.textContent = '住所を自動入力しました。番地・号を追記してください。';
+      } else {
+        statusEl.textContent = '該当する住所が見つかりませんでした。手動でご入力ください。';
+      }
+    }catch(e){
+      statusEl.textContent = '住所の自動取得に失敗しました。手動でご入力ください。';
+    }
+  }
+
+  document.getElementById('toConfirmBtn').addEventListener('click', ()=>{
+    if(!validateStep(1) || !validateStep(2)) return;
+
+    const name = document.getElementById('name').value.trim();
+    const zip = document.getElementById('zip').value.trim();
+    const address1 = document.getElementById('address1').value.trim();
+    const address2 = document.getElementById('address2').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const { total } = recalc();
+    const payVal = document.querySelector('input[name="pay"]:checked').value;
+    const payText = {card:'クレジットカード', cod:'商品代引き'}[payVal];
+    const note = document.getElementById('note').value.trim();
+    const fullAddress = `〒${zip}　${address1}${address2 ? '　' + address2 : ''}`;
+
+    const items_list = rows.filter(r=>+r.querySelector('.qty').textContent>0).map(r=>({
+      name: r.querySelector('.info b').innerText.replace(/\n/g,' '),
+      qty: +r.querySelector('.qty').textContent,
+      sub: r.querySelector('.sub').textContent
+    }));
+
+    document.getElementById('cName').textContent = name + ' 様';
+    document.getElementById('cAddress').textContent = fullAddress;
+    document.getElementById('cPhone').textContent = phone;
+    document.getElementById('cPay').textContent = payText;
+    document.getElementById('cList').innerHTML = items_list.map(i=>
+      `<div class="cline"><span>${i.name} × ${i.qty}</span><span>${i.sub}</span></div>`).join('')
+      + `<div class="cline"><span>送料（クール便）</span><span>${fmt(SHIPPING)}</span></div>`;
+    document.getElementById('cTotal').textContent = fmt(total);
+    const noteWrap = document.getElementById('cNoteWrap');
+    if(note){ noteWrap.style.display='block'; document.getElementById('cNote').textContent = note; }
+    else { noteWrap.style.display='none'; }
+
+    const submitBtn = document.getElementById('submitOrderBtn');
+    submitBtn.textContent = payVal === 'card' ? 'この内容で決済する' : 'この内容でご注文を確定する';
+
+    if(payVal === 'card' && stripe){
+      const orderPayloadBase = { type:'home', shop:'shinshu-marche', name, address:fullAddress, phone, email, items:items_list, total:fmt(total), note };
+      try{
+        setupPaymentRequestButton(total, orderPayloadBase);
+      }catch(e){
+        console.error('Apple Pay/Google Payボタンの初期化に失敗:', e);
+        document.getElementById('paymentRequestWrap').style.display = 'none';
+      }
+    } else {
+      document.getElementById('paymentRequestWrap').style.display = 'none';
+    }
+
+    document.querySelectorAll('.stepbox').forEach(el=> el.hidden = true);
+    document.getElementById('stepsNav').style.display = 'none';
+    document.getElementById('stepLabel').style.display = 'none';
+    document.getElementById('confirmBox').classList.add('show');
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    document.getElementById('editBtn').onclick = ()=>{
+      document.getElementById('confirmBox').classList.remove('show');
+      document.getElementById('stepsNav').style.display = 'flex';
+      document.getElementById('stepLabel').style.display = 'block';
+      showStep(1);
+    };
+
+    document.getElementById('submitOrderBtn').onclick = async ()=>{
+      const orderPayload = { type:'home', shop:'shinshu-marche', name, address:fullAddress, phone, email, payment:payText, items:items_list, total:fmt(total), note };
+
+      if(payVal === 'card'){
+        if(!stripe || !cardNumberEl){
+          alert('決済機能の準備が完了していません。恐れ入りますが「商品代引き」でご注文いただくか、スタッフまでお問い合わせください。');
+          return;
+        }
+
+        submitBtn.textContent = '決済処理中…';
+        submitBtn.disabled = true;
+        cardErrorsEl.textContent = '';
+
+        try{
+          const piRes = await fetch(WORKER_URL + '/create-payment-intent', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+              amount: total,
+              description: `${ORDER_LABEL}（${items_list.map(i=>i.name).join('、')}）`,
+              email,
+            }),
+          });
+          const piData = await piRes.json();
+          if(!piRes.ok || !piData.clientSecret){
+            throw new Error('決済の準備に失敗しました（' + (piData.error || `サーバーエラー: ${piRes.status}`) + '）');
+          }
+
+          const result = await stripe.confirmCardPayment(piData.clientSecret, {
+            payment_method: { card: cardNumberEl, billing_details: { name: document.getElementById('cardHolderName').value.trim() || name, email, phone } }
+          });
+
+          if(result.error){
+            console.error('Stripe決済エラー:', result.error);
+            cardErrorsEl.innerHTML = `⚠ <b>決済エラー</b>：${result.error.message || 'カード情報をご確認ください。'}`;
+            cardErrorsEl.scrollIntoView({behavior:'smooth', block:'center'});
+            submitBtn.textContent = 'この内容で決済する';
+            submitBtn.disabled = false;
+            return;
+          }
+
+          if(result.paymentIntent && result.paymentIntent.status === 'succeeded'){
+            orderPayload.payment = 'クレジットカード（決済済み）';
+            fetch(WORKER_URL + '/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(orderPayload) }).catch(()=>{});
+            document.getElementById('tAddress').textContent = fullAddress;
+            document.getElementById('tTotal').textContent = fmt(total);
+            document.getElementById('confirmBox').classList.remove('show');
+            document.getElementById('thanksBox').classList.add('show');
+            window.scrollTo({top:0, behavior:'smooth'});
+          } else {
+            cardErrorsEl.innerHTML = `⚠ <b>お支払いが完了しませんでした</b>（状態: ${result.paymentIntent ? result.paymentIntent.status : '不明'}）。もう一度お試しください。`;
+            cardErrorsEl.scrollIntoView({behavior:'smooth', block:'center'});
+            submitBtn.textContent = 'この内容で決済する';
+            submitBtn.disabled = false;
+          }
+        }catch(e){
+          console.error('決済処理で例外が発生:', e);
+          cardErrorsEl.innerHTML = `⚠ <b>決済処理に失敗しました</b>：${e.message || e}`;
+          cardErrorsEl.scrollIntoView({behavior:'smooth', block:'center'});
+          submitBtn.textContent = 'この内容で決済する';
+          submitBtn.disabled = false;
+        }
+        return;
+      }
+
+      fetch(WORKER_URL + '/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(orderPayload) }).catch(()=>{});
+
+      document.getElementById('tAddress').textContent = fullAddress;
+      document.getElementById('tTotal').textContent = fmt(total);
+      document.getElementById('confirmBox').classList.remove('show');
+      document.getElementById('thanksBox').classList.add('show');
+      window.scrollTo({top:0, behavior:'smooth'});
+    };
+  });
+
+  renderNav();
+})();
+</script>
+</body>
+</html>

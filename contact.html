@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ｜信州マルシェ</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Old+Mincho:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2b3440; --sub:#5c6672; --cream:#faf7f0; --paper:#ffffff;
+  --green:#3f6b4f; --green-deep:#2d5039; --amber:#c98a2d; --line:#e8e1d3; --red:#b7452c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);color:var(--ink);font-family:'Noto Sans JP',sans-serif;line-height:1.9;-webkit-font-smoothing:antialiased}
+.jp{font-family:'Zen Old Mincho',serif}
+.wrap{max-width:640px;margin:0 auto;padding:0 22px}
+a{color:inherit}
+
+.head{background:var(--cream);border-bottom:1px solid var(--line)}
+.head .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 22px}
+.head .logo{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:18px;display:flex;align-items:center;gap:8px;text-decoration:none}
+.head .logo::before{content:"";width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#6f9d80,var(--green-deep))}
+.head .back{font-size:12.5px;color:var(--sub);text-decoration:none}
+
+.hero{padding:36px 0 8px}
+.hero .tag{display:inline-block;background:var(--green-deep);color:#fff;font-size:11.5px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:14px;letter-spacing:.1em}
+.hero h1{font-size:clamp(22px,5vw,28px);font-weight:900}
+.hero p{margin-top:12px;font-size:13.5px;color:var(--sub)}
+
+.tel-box{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:22px 0;font-size:13.5px}
+.tel-box b{font-size:20px;color:var(--green-deep)}
+.tel-box small{display:block;color:var(--sub);font-size:11.5px}
+
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:24px 22px;margin-bottom:50px;box-shadow:0 8px 24px rgba(43,52,64,.05)}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:11px 12px;font-size:15px;font-family:inherit;background:#fff}
+.field input:focus,.field textarea:focus,.field select:focus{outline:2px solid var(--green);outline-offset:1px;border-color:var(--green)}
+.btn{width:100%;border:0;border-radius:999px;padding:15px 22px;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;background:var(--amber);color:#fff;letter-spacing:.08em;box-shadow:0 6px 16px rgba(201,138,45,.3)}
+.btn:disabled{opacity:.6;cursor:default}
+.msg{display:none;margin-top:14px;font-size:13px;font-weight:700;border-radius:8px;padding:12px 14px}
+.msg.ok{display:block;background:#edf3ee;color:var(--green-deep);border:1px solid #d5e3d8}
+.msg.ng{display:block;background:#fbeae5;color:var(--red);border:1px solid #eccfc5}
+
+.foot{padding:30px 0 60px;text-align:center;font-size:11.5px;color:var(--sub);border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header class="head">
+  <div class="wrap">
+    <a href="index.html" class="logo">信州マルシェ</a>
+    <a href="index.html" class="back">← トップページに戻る</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">CONTACT</span>
+    <h1 class="jp">お問い合わせ</h1>
+    <p>商品やご注文についてのご質問、卸販売のご相談など、お気軽にお問い合わせください。</p>
+  </div>
+
+  <div class="tel-box">
+    お急ぎの方はお電話で<br>
+    <b>0261-85-0131</b>
+    <small>受付時間：9:00～17:00（土日祝除く）／株式会社MONDOCOLO</small>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label for="name">お名前 <span style="color:var(--red)">*</span></label>
+      <input type="text" id="name" placeholder="例）山田 太郎">
+    </div>
+    <div class="field">
+      <label for="email">メールアドレス <span style="color:var(--red)">*</span></label>
+      <input type="email" id="email" placeholder="例）example@mail.com">
+    </div>
+    <div class="field">
+      <label for="type">お問い合わせ種別</label>
+      <select id="type">
+        <option>商品について</option>
+        <option>ご注文・お届けについて</option>
+        <option>卸販売・法人のお客様</option>
+        <option>その他</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="message">お問い合わせ内容 <span style="color:var(--red)">*</span></label>
+      <textarea id="message" rows="6" placeholder="お問い合わせ内容をご記入ください"></textarea>
+    </div>
+    <button type="button" class="btn" id="sendBtn">送信する</button>
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<div class="foot">© 2026 株式会社MONDOCOLO</div>
+
+<script>
+const WORKER_URL = 'https://aged-mode-2be1.hoshizora2307.workers.dev';
+document.getElementById('sendBtn').addEventListener('click', async ()=>{
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const type = document.getElementById('type').value;
+  const message = document.getElementById('message').value.trim();
+  const msgEl = document.getElementById('msg');
+  const btn = document.getElementById('sendBtn');
+  msgEl.className = 'msg';
+
+  if(!name || !email || !message){
+    msgEl.textContent = '必須項目（お名前・メールアドレス・お問い合わせ内容）をご入力ください。';
+    msgEl.classList.add('ng');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '送信中…';
+  try{
+    const res = await fetch(WORKER_URL + '/contact', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name, email, type: '【信州マルシェ】' + type, message }),
+    });
+    if(!res.ok) throw new Error('送信に失敗しました');
+    msgEl.textContent = 'お問い合わせを受け付けました。確認メールをお送りしましたのでご確認ください。';
+    msgEl.classList.add('ok');
+    document.getElementById('message').value = '';
+  }catch(e){
+    msgEl.textContent = '送信に失敗しました。お手数ですが、時間をおいて再度お試しいただくか、お電話にてご連絡ください。';
+    msgEl.classList.add('ng');
+  }finally{
+    btn.disabled = false;
+    btn.textContent = '送信する';
+  }
+});
+</script>
+</body>
+</html>

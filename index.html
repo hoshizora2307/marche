@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信州マルシェ｜信州のおいしいを、産地直送で。</title>
+<meta name="description" content="信州濃厚プリン、安曇野バスクチーズケーキ、おやき、信州アップルパイ、野沢菜、黒ニンニク。信州・大町の工房から、選りすぐりの味をクール便でお届けします。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Old+Mincho:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2b3440;  --ink-soft:#5c6672;
+  --cream:#faf7f0;  --paper:#ffffff;
+  --green:#3f6b4f;  --green-deep:#2d5039;
+  --amber:#c98a2d;  --amber-soft:#f3e3c2;
+  --line:#e8e1d3;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(43,52,64,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans JP',sans-serif;
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+.serif{font-family:'Zen Old Mincho',serif}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(250,247,240,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:64px;
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:34px;height:34px}
+.brand-name{font-family:'Zen Old Mincho',serif;font-weight:900;font-size:1.25rem;letter-spacing:.08em}
+.brand-name small{display:block;font-family:'Noto Sans JP',sans-serif;font-weight:500;font-size:.6rem;letter-spacing:.3em;color:var(--green);line-height:1}
+nav{display:flex;gap:26px;font-size:.9rem;font-weight:500}
+nav a{position:relative;padding:4px 0}
+nav a:hover{color:var(--green)}
+.nav-cta{
+  background:var(--green);color:#fff;border-radius:999px;
+  padding:8px 20px;font-weight:700;transition:.2s;
+}
+.nav-cta:hover{background:var(--green-deep);color:#fff}
+@media(max-width:720px){nav a:not(.nav-cta){display:none}}
+
+.hero{
+  position:relative;overflow:hidden;
+  padding:72px 0 0;
+  background:linear-gradient(180deg,#f3efe4 0%,var(--cream) 100%);
+}
+.hero-inner{position:relative;text-align:center;z-index:2}
+.hero-badge{
+  display:inline-block;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:6px 18px;font-size:.8rem;font-weight:700;
+  color:var(--green);letter-spacing:.15em;margin-bottom:22px;
+}
+.hero h1{
+  font-family:'Zen Old Mincho',serif;font-weight:900;
+  font-size:clamp(2rem,5.5vw,3.4rem);
+  letter-spacing:.06em;line-height:1.5;
+}
+.hero h1 em{font-style:normal;color:var(--green)}
+.hero p.lead{
+  margin-top:18px;font-size:clamp(.95rem,2vw,1.1rem);color:var(--ink-soft);
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:30px;background:var(--amber);color:#fff;
+  border-radius:999px;padding:15px 42px;font-weight:900;font-size:1.05rem;
+  letter-spacing:.1em;box-shadow:0 8px 20px rgba(201,138,45,.35);transition:.2s;
+}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(201,138,45,.45)}
+.hero-mountains{margin-top:48px;width:100%}
+
+.trust{background:var(--green-deep);color:#fff}
+.trust-inner{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px 40px;
+  padding:14px 0;font-size:.85rem;font-weight:700;letter-spacing:.08em;
+}
+.trust-inner span::before{content:"◆";color:var(--amber);margin-right:8px;font-size:.7em}
+
+section{padding:80px 0}
+.sec-head{text-align:center;margin-bottom:52px}
+.sec-head .en{
+  font-size:.75rem;font-weight:900;letter-spacing:.35em;color:var(--amber);
+}
+.sec-head h2{
+  font-family:'Zen Old Mincho',serif;font-weight:900;
+  font-size:clamp(1.5rem,3.5vw,2.2rem);letter-spacing:.1em;margin-top:6px;
+}
+.sec-head p{margin-top:14px;color:var(--ink-soft);font-size:.95rem}
+
+.grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:28px;
+}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;
+  transition:.25s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(43,52,64,.13)}
+.card-photo{aspect-ratio:4/3;position:relative}
+.card-photo svg{width:100%;height:100%}
+.card-tag{
+  position:absolute;top:12px;left:12px;
+  background:var(--green);color:#fff;font-size:.7rem;font-weight:900;
+  letter-spacing:.12em;border-radius:999px;padding:4px 12px;
+}
+.card-tag.hot{background:#b7452c}
+.card-body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.card-body h3{
+  font-family:'Zen Old Mincho',serif;font-weight:700;font-size:1.15rem;letter-spacing:.05em;
+}
+.card-body .desc{font-size:.85rem;color:var(--ink-soft);margin-top:8px;flex:1}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.chip{
+  font-size:.72rem;font-weight:700;color:var(--green-deep);
+  background:#edf3ee;border:1px solid #d5e3d8;border-radius:999px;padding:2px 10px;
+}
+.chip.sweet{color:#8a5a18;background:#faf1df;border-color:#ecd9b4}
+.price-row{
+  display:flex;align-items:baseline;justify-content:space-between;
+  margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);
+}
+.price{font-weight:900;font-size:1.25rem}
+.price small{font-size:.7rem;font-weight:500;color:var(--ink-soft);margin-left:2px}
+.buy{
+  background:var(--ink);color:#fff;border-radius:999px;
+  padding:8px 20px;font-size:.8rem;font-weight:900;letter-spacing:.08em;transition:.2s;
+}
+.buy:hover{background:var(--green)}
+
+.about{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.about-flex{display:flex;gap:56px;align-items:center}
+@media(max-width:820px){.about-flex{flex-direction:column}}
+.about-text{flex:1}
+.about-text h2{
+  font-family:'Zen Old Mincho',serif;font-weight:900;
+  font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.08em;line-height:1.7;
+}
+.about-text p{margin-top:20px;color:var(--ink-soft);font-size:.95rem}
+.about-art{flex:1;max-width:440px}
+.about-note{
+  margin-top:24px;background:var(--amber-soft);border-radius:12px;
+  padding:16px 20px;font-size:.85rem;
+}
+.about-note a{color:var(--green-deep);font-weight:700;text-decoration:underline}
+
+.flow-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:720px){.flow-grid{grid-template-columns:1fr}}
+.flow-item{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:30px 26px;text-align:center;box-shadow:var(--shadow);
+}
+.flow-num{
+  width:44px;height:44px;margin:0 auto 14px;border-radius:50%;
+  background:var(--green);color:#fff;font-weight:900;font-size:1.1rem;
+  display:flex;align-items:center;justify-content:center;
+}
+.flow-item h3{font-size:1rem;font-weight:900;letter-spacing:.08em}
+.flow-item p{font-size:.85rem;color:var(--ink-soft);margin-top:8px}
+
+.cta-band{
+  background:linear-gradient(135deg,var(--green-deep),var(--green));
+  color:#fff;text-align:center;
+}
+.cta-band h2{
+  font-family:'Zen Old Mincho',serif;font-weight:900;
+  font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:.1em;
+}
+.cta-band p{margin-top:12px;opacity:.9;font-size:.95rem}
+.cta-band .hero-cta{margin-top:26px}
+
+footer{background:#242b33;color:#c8cdd4;padding:56px 0 32px;font-size:.85rem}
+.foot-grid{display:flex;flex-wrap:wrap;gap:40px;justify-content:space-between}
+.foot-brand .brand-name{color:#fff}
+.foot-brand p{margin-top:14px;max-width:320px;color:#9aa2ac}
+.foot-col h4{color:#fff;font-size:.8rem;letter-spacing:.2em;margin-bottom:14px}
+.foot-col a{display:block;margin-bottom:10px;color:#c8cdd4}
+.foot-col a:hover{color:#fff}
+.copyright{
+  margin-top:44px;padding-top:22px;border-top:1px solid #3a424c;
+  text-align:center;color:#8a929c;font-size:.75rem;letter-spacing:.08em;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="#">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="19" fill="#3f6b4f"/>
+        <path d="M6 27 L15 13 L21 22 L26 15 L34 27 Z" fill="#faf7f0"/>
+        <path d="M13.5 15.5 L15 13 L16.5 15.5 Z" fill="#3f6b4f" opacity=".0"/>
+        <circle cx="29" cy="10" r="2.4" fill="#c98a2d"/>
+      </svg>
+      <span class="brand-name">信州マルシェ<small>SHINSHU MARCHÉ</small></span>
+    </a>
+    <nav>
+      <a href="#products">商品一覧</a>
+      <a href="#about">信州マルシェとは</a>
+      <a href="contact.html">お問い合わせ</a>
+      <a class="nav-cta" href="order.html">ご注文はこちら</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="container hero-inner">
+    <span class="hero-badge">信州・大町から、産地直送。</span>
+    <h1>信州の<em>「おいしい」</em>を、<br>まるごと詰めて。</h1>
+    <p class="lead">濃厚プリンも、バスクチーズケーキも、おやきも、野沢菜も。<br>北アルプスの麓で育った選りすぐりの味を、クール便でご自宅へお届けします。</p>
+    <a class="hero-cta" href="#products">商品をみる ↓</a>
+  </div>
+  <svg class="hero-mountains" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 180 L0 120 L160 60 L300 130 L430 40 L560 120 L720 20 L880 110 L1020 50 L1160 125 L1300 70 L1440 130 L1440 180 Z" fill="#e3ddcd"/>
+    <path d="M0 180 L0 150 L200 100 L380 155 L560 90 L760 150 L960 85 L1150 150 L1320 110 L1440 155 L1440 180 Z" fill="#d3ccb8"/>
+  </svg>
+</div>
+
+<div class="trust">
+  <div class="container trust-inner">
+    <span>ご注文から2日以内に発送</span>
+    <span>クール便でお届け</span>
+    <span>信州産素材を厳選</span>
+    <span>Amazonランキング1位のプリン</span>
+  </div>
+</div>
+
+<section id="products">
+  <div class="container">
+    <div class="sec-head">
+      <span class="en">LINE UP</span>
+      <h2>信州マルシェの看板商品</h2>
+      <p>甘いものから、ごはんのお供まで。信州の食卓をそのままお届けします。</p>
+    </div>
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="card-photo">
+          <span class="card-tag hot">いちばん人気</span>
+          <svg viewBox="0 0 400 300" aria-label="信州濃厚プリンのイメージ">
+            <rect width="400" height="300" fill="#f6ead3"/>
+            <ellipse cx="200" cy="238" rx="150" ry="26" fill="#e8d9bb"/>
+            <path d="M120 225 Q120 130 145 118 L255 118 Q280 130 280 225 Q280 240 200 240 Q120 240 120 225 Z" fill="#f2c14e"/>
+            <path d="M140 122 Q200 108 260 122 Q268 140 264 152 Q236 170 200 166 Q160 170 136 150 Q132 136 140 122 Z" fill="#8a4b1f"/>
+            <path d="M150 128 Q158 150 150 160" stroke="#6e3a15" stroke-width="4" fill="none" opacity=".5"/>
+            <ellipse cx="200" cy="118" rx="60" ry="10" fill="#a05c28"/>
+            <ellipse cx="165" cy="160" rx="14" ry="24" fill="#ffe9a8" opacity=".55"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>信州濃厚プリン</h3>
+          <p class="desc">素材は、たった4つ。八ヶ岳の牛乳と信州産卵でつくる、引き算のレシピ。Amazonランキング1位の看板プリンです。</p>
+          <div class="chips"><span class="chip sweet">冷凍保存3ヶ月OK</span><span class="chip sweet">素材4つだけ</span></div>
+          <div class="price-row">
+            <span class="price">¥480<small>（税込）/ 個</small></span>
+            <a class="buy" href="order.html">購入する</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-photo">
+          <span class="card-tag">3つの味</span>
+          <svg viewBox="0 0 400 300" aria-label="安曇野バスクチーズケーキのイメージ">
+            <rect width="400" height="300" fill="#f3e7db"/>
+            <ellipse cx="200" cy="242" rx="150" ry="24" fill="#e2d2c0"/>
+            <path d="M110 230 Q108 160 130 148 Q200 128 270 148 Q292 160 290 230 Q290 246 200 246 Q110 246 110 230 Z" fill="#f0d9a8"/>
+            <path d="M126 152 Q200 128 274 152 Q282 168 276 176 Q200 158 124 176 Q118 166 126 152 Z" fill="#7c4a22"/>
+            <path d="M150 160 Q152 168 148 172 M200 152 Q202 162 198 166 M250 160 Q252 168 248 172" stroke="#5e3617" stroke-width="5" fill="none" opacity=".55" stroke-linecap="round"/>
+            <circle cx="140" cy="205" r="9" fill="#c0392b" opacity=".85"/>
+            <circle cx="262" cy="208" r="9" fill="#5b4a8f" opacity=".85"/>
+            <path d="M138 196 Q140 190 145 189" stroke="#3f6b4f" stroke-width="3" fill="none"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>安曇野バスクチーズケーキ</h3>
+          <p class="desc">外は香ばしく、中はとろり。安曇野生まれの濃厚バスクを、定番プレーンと信州らしい果実の3フレーバーで。</p>
+          <div class="chips"><span class="chip sweet">プレーン</span><span class="chip sweet">アップル</span><span class="chip sweet">ブルーベリー</span></div>
+          <div class="price-row">
+            <span class="price">¥1,300<small>（税込）</small></span>
+            <a class="buy" href="order.html">購入する</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-photo">
+          <span class="card-tag">信州名物</span>
+          <svg viewBox="0 0 400 300" aria-label="おやき4個入りのイメージ">
+            <rect width="400" height="300" fill="#efe8da"/>
+            <ellipse cx="200" cy="248" rx="160" ry="24" fill="#ddd2bd"/>
+            <g>
+              <ellipse cx="140" cy="150" rx="62" ry="48" fill="#e8ceA0"/>
+              <ellipse cx="140" cy="150" rx="62" ry="48" fill="#e6c996"/>
+              <path d="M110 130 Q140 118 170 130" stroke="#c8a468" stroke-width="5" fill="none" opacity=".7"/>
+              <ellipse cx="140" cy="132" rx="20" ry="8" fill="#d9b87e"/>
+            </g>
+            <g>
+              <ellipse cx="262" cy="150" rx="62" ry="48" fill="#e6c996"/>
+              <path d="M232 130 Q262 118 292 130" stroke="#c8a468" stroke-width="5" fill="none" opacity=".7"/>
+              <ellipse cx="262" cy="132" rx="20" ry="8" fill="#d9b87e"/>
+            </g>
+            <g>
+              <ellipse cx="140" cy="215" rx="62" ry="48" fill="#e2c28c"/>
+              <path d="M110 195 Q140 183 170 195" stroke="#c8a468" stroke-width="5" fill="none" opacity=".7"/>
+            </g>
+            <g>
+              <ellipse cx="262" cy="215" rx="62" ry="48" fill="#e6c996"/>
+              <path d="M232 195 Q262 183 292 195" stroke="#c8a468" stroke-width="5" fill="none" opacity=".7"/>
+            </g>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>おやき（4個入り）</h3>
+          <p class="desc">信州のおふくろの味。もちっとした皮に、具材をたっぷり包みました。定番4種の詰め合わせです。</p>
+          <div class="chips"><span class="chip">野沢菜</span><span class="chip">あんこ</span><span class="chip">切り干し大根</span><span class="chip">なす</span></div>
+          <div class="price-row">
+            <span class="price">¥1,080<small>（税込）</small></span>
+            <a class="buy" href="order.html">購入する</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-photo">
+          <span class="card-tag">りんご王国</span>
+          <svg viewBox="0 0 400 300" aria-label="信州アップルパイのイメージ">
+            <rect width="400" height="300" fill="#f6ecd9"/>
+            <ellipse cx="200" cy="245" rx="150" ry="24" fill="#e6d8bd"/>
+            <path d="M95 235 Q95 175 200 145 Q305 175 305 235 Q305 250 200 250 Q95 250 95 235 Z" fill="#d99a3e"/>
+            <path d="M120 210 L280 172 M150 235 L296 196 M104 190 L240 156 M170 150 L120 226 M215 148 L170 244 M262 158 L228 248" stroke="#b97b26" stroke-width="9" opacity=".8"/>
+            <path d="M95 235 Q95 228 100 222 Q200 250 300 222 Q305 228 305 235 Q305 250 200 250 Q95 250 95 235 Z" fill="#c0812a"/>
+            <circle cx="255" cy="120" r="26" fill="#c0392b"/>
+            <path d="M255 96 Q254 86 262 82" stroke="#6e4a22" stroke-width="4" fill="none"/>
+            <path d="M262 92 Q274 84 280 92 Q272 100 262 96 Z" fill="#3f6b4f"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>信州アップルパイ</h3>
+          <p class="desc">りんご王国・信州の完熟りんごをごろごろと。バターの香るサクサク生地に閉じ込めました。</p>
+          <div class="chips"><span class="chip sweet">信州産りんご</span></div>
+          <div class="price-row">
+            <span class="price">¥1,650<small>（税込）</small></span>
+            <a class="buy" href="order.html">購入する</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-photo">
+          <span class="card-tag">ごはんのお供</span>
+          <svg viewBox="0 0 400 300" aria-label="野沢菜漬けのイメージ">
+            <rect width="400" height="300" fill="#eef0e4"/>
+            <ellipse cx="200" cy="245" rx="140" ry="24" fill="#dcdfc9"/>
+            <path d="M110 240 Q100 200 130 190 L270 190 Q300 200 290 240 Q290 252 200 252 Q110 252 110 240 Z" fill="#e9e2cf"/>
+            <path d="M130 192 Q140 130 150 118 Q158 128 156 192 Z" fill="#4a7a44"/>
+            <path d="M160 192 Q168 118 182 100 Q192 112 186 192 Z" fill="#3f6b3a"/>
+            <path d="M192 192 Q198 112 214 96 Q224 110 216 192 Z" fill="#548a4c"/>
+            <path d="M222 192 Q232 124 246 110 Q254 124 248 192 Z" fill="#436f3d"/>
+            <path d="M252 192 Q258 140 268 128 Q274 140 270 192 Z" fill="#4f8248"/>
+            <path d="M118 214 Q200 226 282 214" stroke="#cbc3a8" stroke-width="4" fill="none" opacity=".8"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>野沢菜</h3>
+          <p class="desc">信州の冬の定番。シャキシャキの歯ごたえと、あと引く塩加減。ごはんにも、お茶請けにも。</p>
+          <div class="chips"><span class="chip">信州伝統の味</span></div>
+          <div class="price-row">
+            <span class="price">¥540<small>（税込）</small></span>
+            <a class="buy" href="order.html">購入する</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-photo">
+          <span class="card-tag">毎日の元気に</span>
+          <svg viewBox="0 0 400 300" aria-label="黒ニンニクのイメージ">
+            <rect width="400" height="300" fill="#efe6dc"/>
+            <ellipse cx="200" cy="245" rx="140" ry="24" fill="#ddd0c2"/>
+            <g>
+              <path d="M150 230 Q108 226 108 182 Q108 146 150 130 Q158 122 162 130 Q200 146 200 184 Q200 226 150 230 Z" fill="#f1e3cc"/>
+              <path d="M152 128 Q150 114 158 106" stroke="#b09a72" stroke-width="5" fill="none"/>
+              <path d="M132 226 Q128 180 140 142 M158 228 Q162 180 154 138 M176 220 Q182 184 168 140" stroke="#d9c5a2" stroke-width="4" fill="none"/>
+            </g>
+            <g>
+              <path d="M258 236 Q214 232 214 190 Q214 156 254 140 Q262 132 266 140 Q306 156 306 192 Q306 232 258 236 Z" fill="#3a2f2a"/>
+              <path d="M256 138 Q254 124 262 116" stroke="#241d19" stroke-width="5" fill="none"/>
+              <path d="M238 232 Q234 190 246 152 M264 234 Q268 188 260 148 M284 226 Q290 192 276 150" stroke="#241d19" stroke-width="4" fill="none" opacity=".8"/>
+            </g>
+            <path d="M196 176 L212 176 M204 168 L204 184" stroke="#8a7a64" stroke-width="0" fill="none"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <h3>黒ニンニク</h3>
+          <p class="desc">じっくり熟成させて、フルーティーな甘さに。臭いが残りにくく、毎日ひと粒の健康習慣に。</p>
+          <div class="chips"><span class="chip">熟成発酵</span><span class="chip">砂糖・添加物不使用</span></div>
+          <div class="price-row">
+            <span class="price">¥1,200<small>（税込）</small></span>
+            <a class="buy" href="order.html">購入する</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="container about-flex">
+    <div class="about-text">
+      <span class="en" style="font-size:.75rem;font-weight:900;letter-spacing:.35em;color:var(--amber)">ABOUT</span>
+      <h2>北アルプスの麓、<br>大町の小さな工房から。</h2>
+      <p>信州マルシェは、長野県大町市の工房から「信州のほんとうにおいしいもの」だけを選んでお届けする、産地直送のオンラインマルシェです。</p>
+      <p>看板商品の信州濃厚プリンと同じように、どの商品も素材と作り手にこだわりました。市場に並ぶ顔ぶれを眺めるように、季節の味をお楽しみください。</p>
+      <div class="about-note">
+        プリン専門店として始まった私たちのものづくりは、<a href="https://shinshupudding.hoshizora2307.workers.dev/" target="_blank" rel="noopener">「信州濃厚プリン」公式サイト</a>でご覧いただけます。
+      </div>
+    </div>
+    <div class="about-art">
+      <svg viewBox="0 0 440 330" aria-hidden="true">
+        <rect width="440" height="330" rx="18" fill="#f3efe4"/>
+        <path d="M0 250 L80 150 L150 230 L230 120 L320 220 L400 160 L440 210 L440 330 L0 330 Z" fill="#d3ccb8"/>
+        <path d="M215 132 L230 120 L245 132 L238 132 L230 126 L222 132 Z" fill="#fff"/>
+        <circle cx="360" cy="70" r="30" fill="#f2c14e" opacity=".9"/>
+        <g>
+          <rect x="150" y="230" width="140" height="70" rx="6" fill="#8a6a44"/>
+          <path d="M138 236 L220 196 L302 236 Z" fill="#b7452c"/>
+          <rect x="205" y="258" width="30" height="42" rx="3" fill="#5e4630"/>
+          <rect x="165" y="248" width="26" height="22" rx="3" fill="#f6ead3"/>
+          <rect x="249" y="248" width="26" height="22" rx="3" fill="#f6ead3"/>
+        </g>
+        <path d="M60 300 Q70 280 80 300 M330 305 Q340 282 352 305 M380 300 Q388 284 396 300" stroke="#3f6b4f" stroke-width="6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="flow">
+  <div class="container">
+    <div class="sec-head">
+      <span class="en">HOW TO ORDER</span>
+      <h2>ご購入はかんたん3ステップ</h2>
+    </div>
+    <div class="flow-grid">
+      <div class="flow-item">
+        <div class="flow-num">1</div>
+        <h3>商品をえらぶ</h3>
+        <p>お好きな商品をカートへ。組み合わせ自由です。</p>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">2</div>
+        <h3>ご注文・お支払い</h3>
+        <p>フォームからかんたんにご注文いただけます。</p>
+      </div>
+      <div class="flow-item">
+        <div class="flow-num">3</div>
+        <h3>2日以内に発送</h3>
+        <p>クール便で、作りたてのおいしさをお届けします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="container">
+    <h2>今日の食卓に、信州のごちそうを。</h2>
+    <p>季節ごとに顔ぶれが変わる、小さなオンラインマルシェです。</p>
+    <a class="hero-cta" href="order.html">ご注文はこちら</a>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="brand-name serif">信州マルシェ</span>
+        <p>長野県大町市の工房から、信州の選りすぐりの味を産地直送でお届けします。</p>
+      </div>
+      <div class="foot-col">
+        <h4>SHOP</h4>
+        <a href="#products">商品一覧</a>
+        <a href="order.html">ご注文フォーム</a>
+        <a href="https://shinshupudding.hoshizora2307.workers.dev/" target="_blank" rel="noopener">信州濃厚プリン 公式サイト</a>
+      </div>
+      <div class="foot-col">
+        <h4>INFO</h4>
+        <a href="company.html">運営会社（株式会社MONDOCOLO）</a>
+        <a href="tokushoho.html">特定商取引法に基づく表記</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+      </div>
+    </div>
+    <div class="copyright">© 2026 SHINSHU MARCHÉ / MONDOCOLO Inc. All Rights Reserved.</div>
+  </div>
+</footer>
+
+</body>
+</html>
